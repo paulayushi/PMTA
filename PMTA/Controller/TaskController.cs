@@ -50,6 +50,12 @@ namespace PMTA.WebAPI.Controller
         [Route("list/{memberId}/taskDetails")]
         public async Task<IActionResult> FetchTaskDetailsByMemberId([FromRoute] int memberId)
         {
+            var memberFromDB = await _repository.GetByIdAsync(memberId);
+
+            if (memberFromDB == null)
+            {
+                return BadRequest($"Member with Id = {memberId} does not exist in the system. Please provide correct member id.");
+            }
             var tasks = await _quoteDispatcher.SendAsync(new GetTasksByMemberIdQuery()
             {
                 MemberId = memberId
