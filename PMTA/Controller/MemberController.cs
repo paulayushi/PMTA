@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PMTA.Domain.Command;
 using PMTA.Domain.DTO;
 using PMTA.Domain.Entity;
@@ -11,6 +12,7 @@ namespace PMTA.WebAPI.Controller
 {
     [ApiController]
     [Route("projectmgmt/api/v1/manager/")]
+    [Authorize]
     public class MemberController : ControllerBase
     {
         private readonly ILogger<MemberController> _logger;

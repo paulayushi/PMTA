@@ -6,11 +6,13 @@ using PMTA.Infrastructure.Repository;
 using PMTA.Domain.Command;
 using PMTA.Domain.Query;
 using PMTA.Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PMTA.WebAPI.Controller
 {
     [ApiController]
     [Route("projectmgmt/api/v1/manager/")]
+    [Authorize]
     public class TaskController : ControllerBase
     {
         private readonly ILogger<TaskController> _logger;
