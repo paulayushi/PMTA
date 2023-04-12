@@ -26,5 +26,9 @@ namespace PMTA.Domain.Command
         [Required]
         [Range(0,100, ErrorMessage = "Allocation should be provided as percentage.")]
         public int AllocationPercentage { get; set; }
+        [Required]
+        [StringLength(int.MaxValue, MinimumLength = 4, ErrorMessage = "Password should be atleast 4 characters of length!")]
+        public string Password { get; set; }
+        public bool IsManager { get; set; } = false;
     }
 }

@@ -45,7 +45,6 @@ builder.Services.AddSingleton<DbContextFactory>(new DbContextFactory(configureDb
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IEventStoreRepository, EventStoreRepository>();
 builder.Services.AddScoped<IEventProducer, EventProducer>();
 builder.Services.AddScoped<IEventStore, EventStore>();
@@ -62,7 +61,6 @@ var commandDispatcher = new CommandDispatcher();
 commandDispatcher.RegisterHandler<CreateMemberCommand>(commandHandler.HandleAsync);
 commandDispatcher.RegisterHandler<UpdateMemberCommand>(commandHandler.HandleAsync);
 commandDispatcher.RegisterHandler<CreateTaskCommand>(commandHandler.HandleAsync);
-commandDispatcher.RegisterHandler<CreateUserCommand>(commandHandler.HandleAsync);
 builder.Services.AddSingleton<ICommandDispatcher>(_ => commandDispatcher);
 
 //Registering query handlers

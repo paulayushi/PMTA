@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PMTA.Infrastructure.Migrations
 {
-    public partial class CreateTablesInitial : Migration
+    public partial class CreateMembersAndTasks : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,7 +21,10 @@ namespace PMTA.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProjectStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProjectEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AllocationPercentage = table.Column<int>(type: "int", nullable: false)
+                    AllocationPercentage = table.Column<int>(type: "int", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    IsManager = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

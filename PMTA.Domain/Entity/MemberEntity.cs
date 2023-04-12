@@ -24,6 +24,12 @@ namespace PMTA.Domain.Entity
         public DateTime ProjectEndDate { get; set; }
         [Required]
         public int AllocationPercentage { get; set; }
+        [Required]
+        public byte[] PasswordHash { get; set; }
+        [Required]
+        public byte[] PasswordSalt { get; set; }
+        [Required]
+        public bool IsManager { get; set; }
         public virtual ICollection<TaskEntity> Tasks { get; set; }
     }
 }

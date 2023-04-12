@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using PMTA.Domain.Command;
+using PMTA.Domain.DTO;
 using PMTA.Domain.Entity;
 
 namespace PMTA.Infrastructure.Helper
@@ -8,7 +8,12 @@ namespace PMTA.Infrastructure.Helper
     {
         public AutoMapperProfile()
         {
-            CreateMap<UserEntity, CreateUserCommand>().ReverseMap();
+            CreateMap<MemberEntity, MemberQueryResponse>();
+            CreateMap<TaskEntity, TaskDto>();
+            CreateMap<TaskEntity, TaskQueryResponse>()
+                .ForMember( dest => dest.ProjectStartDate, opt => opt.MapFrom(src => src.Member.ProjectStartDate))
+                .ForMember(dest => dest.ProjectEndDate, opt => opt.MapFrom(src => src.Member.ProjectEndDate))
+                .ForMember(dest => dest.AllocationPercentage, opt => opt.MapFrom(src => src.Member.AllocationPercentage));
         }
     }
 }

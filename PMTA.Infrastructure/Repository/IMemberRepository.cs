@@ -9,5 +9,7 @@ namespace PMTA.Infrastructure.Repository
         Task DeleteAsync(int memberId);
         Task<MemberEntity> GetByIdAsync(int memberId);
         Task<List<MemberEntity>> GetAllAsync();
+        Task<MemberEntity> Login(int userId, string password);
+        //Task<bool> UserExist(int userId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using PMTA.Core.Aggregate;
 using PMTA.Domain.Command;
+using PMTA.Domain.Entity;
 using PMTA.Domain.Event;
 
 namespace PMTA.Domain.Aggregate
@@ -15,6 +16,8 @@ namespace PMTA.Domain.Aggregate
 
         public MemberAggregate(CreateMemberCommand createMemberCommand)
         {
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(createMemberCommand.Password, out passwordHash, out passwordSalt);
             RaiseEvent(new MemberCreatedEvent
             {
                 Id = Guid.NewGuid(),
@@ -26,10 +29,22 @@ namespace PMTA.Domain.Aggregate
                 ProjectEndDate = createMemberCommand.ProjectEndDate,
                 AllocationPercentage = createMemberCommand.AllocationPercentage,
                 DateCreated = DateTime.Now,
-                Description = createMemberCommand.Description
+                Description = createMemberCommand.Description,
+                IsManager = createMemberCommand.IsManager,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
             });
-        }
+        }      
 
+        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hkey = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hkey.Key;
+                passwordHash = hkey.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+
+        }
         public void Apply(MemberCreatedEvent @event)
         {
             _id = @event.Id;

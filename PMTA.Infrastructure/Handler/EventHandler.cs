@@ -27,7 +27,10 @@ namespace PMTA.Infrastructure.Handler
                 Experience = memberCreatedEvent.Experience,
                 ProjectEndDate = memberCreatedEvent.ProjectEndDate,
                 ProjectStartDate = memberCreatedEvent.ProjectStartDate,
-                Skillset = string.Join(',', memberCreatedEvent.Skillset)
+                Skillset = string.Join(',', memberCreatedEvent.Skillset),
+                PasswordSalt= memberCreatedEvent.PasswordSalt,
+                PasswordHash= memberCreatedEvent.PasswordHash,
+                IsManager = memberCreatedEvent.IsManager
             };
 
             await _memberRepository.AddAsync(memberEntity);

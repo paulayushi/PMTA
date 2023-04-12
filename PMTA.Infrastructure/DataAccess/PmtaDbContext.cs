@@ -11,7 +11,7 @@ namespace PMTA.Infrastructure.DataAccess
 
         public DbSet<MemberEntity> Members { get; set; }
         public DbSet<TaskEntity> Tasks { get; set; }
-        public DbSet<UserEntity> Users { get; set; }
+        //public DbSet<UserEntity> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

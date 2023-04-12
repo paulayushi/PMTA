@@ -7,6 +7,7 @@ using PMTA.Domain.Command;
 using PMTA.Domain.Query;
 using PMTA.Domain.DTO;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace PMTA.WebAPI.Controller
 {
@@ -19,13 +20,15 @@ namespace PMTA.WebAPI.Controller
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher<TaskEntity> _quoteDispatcher;
         private readonly IMemberRepository _repository;
+        private readonly IMapper _mapper;
         public TaskController(ILogger<TaskController> logger, ICommandDispatcher commandDispatcher,
-            IQueryDispatcher<TaskEntity> quoteDispatcher, IMemberRepository repository)
+            IQueryDispatcher<TaskEntity> quoteDispatcher, IMemberRepository repository, IMapper mapper)
         {
             _logger = logger;
             _commandDispatcher = commandDispatcher;
             _quoteDispatcher = quoteDispatcher;
             _repository = repository;
+            _mapper = mapper;
         }
         [HttpPost]
         [Route("assign-task")]
@@ -68,26 +71,9 @@ namespace PMTA.WebAPI.Controller
                 return NoContent();
             }
 
-            List<TaskQueryResponse> taskDtoList = new();
-            foreach (var task in tasks)
-            {
-                var taskDto = new TaskQueryResponse
-                {
-                    TaskId = task.TaskId,
-                    AllocationPercentage = task.Member.AllocationPercentage,
-                    Delivarables = task.Delivarables,
-                    MemberId = task.MemberId,
-                    MemberName = task.MemberName,
-                    ProjectStartDate = task.Member.ProjectStartDate,
-                    ProjectEndDate = task.Member.ProjectEndDate,
-                    TaskEndDate = task.TaskEndDate,
-                    TaskName = task.TaskName,
-                    TaskStartDate = task.TaskStartDate
-                };
-                taskDtoList.Add(taskDto);
-            }
+            var taskList = _mapper.Map<List<TaskQueryResponse>>(tasks);            
 
-            return Ok(taskDtoList);            
+            return Ok(taskList);            
         }
     }
 }

@@ -44,21 +44,47 @@ namespace PMTA.Infrastructure.Repository
 
         public async Task UpdateAsync(MemberEntity member)
         {
-            try
-            {
-                var memberFromDB = await GetByIdAsync(member.MemberId);
-                if (memberFromDB is null) return;
+            var memberFromDB = await GetByIdAsync(member.MemberId);
+            if (memberFromDB is null) return;
 
-                using var dbContext = _dbContextFactory.CreateDbContext();
-                memberFromDB.AllocationPercentage = member.AllocationPercentage;
-                dbContext.Update(memberFromDB);
-                _ = await dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            memberFromDB.AllocationPercentage = member.AllocationPercentage;
+            dbContext.Update(memberFromDB);
+            _ = await dbContext.SaveChangesAsync();
 
+        }
+        public async Task<MemberEntity> Login(int userId, string password)
+        {
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            var user = await dbContext.Members.FirstOrDefaultAsync(x => x.MemberId == userId);
+            if (user == null)
+                return null;
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+                return null;
+
+            return user;
+        }
+
+        //public async Task<bool> UserExist(int userId)
+        //{
+        //    using var dbContext = _dbContextFactory.CreateDbContext();
+        //    if (await dbContext.Members.AnyAsync(x => x.MemberId == userId))
+        //        return true;
+        //    return false;
+        //}
+
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hkey = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+            {
+                var computedPassword = hkey.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedPassword.Length; i++)
+                {
+                    if (computedPassword[i] != passwordHash[i])
+                        return false;
+                }
+            }
+            return true;
         }
     }
 }

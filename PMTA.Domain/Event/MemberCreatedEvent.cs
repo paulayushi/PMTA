@@ -16,5 +16,8 @@ namespace PMTA.Domain.Event
         public DateTime ProjectEndDate { get; set; }
         public int AllocationPercentage { get; set; }
         public DateTime DateCreated { get; set; }
+        public byte[]? PasswordHash { get; set; }
+        public byte[]? PasswordSalt { get; set; }
+        public bool IsManager { get; set; } = false;
     }
 }

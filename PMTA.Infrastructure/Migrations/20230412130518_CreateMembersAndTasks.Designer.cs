@@ -12,8 +12,8 @@ using PMTA.Infrastructure.DataAccess;
 namespace PMTA.Infrastructure.Migrations
 {
     [DbContext(typeof(PmtaDbContext))]
-    [Migration("20230328163834_CreateTablesInitial")]
-    partial class CreateTablesInitial
+    [Migration("20230412130518_CreateMembersAndTasks")]
+    partial class CreateMembersAndTasks
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,9 +42,20 @@ namespace PMTA.Infrastructure.Migrations
                     b.Property<int>("Experience")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsManager")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("ProjectEndDate")
                         .HasColumnType("datetime2");
