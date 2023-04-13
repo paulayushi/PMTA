@@ -13,18 +13,16 @@ namespace PMTA.WebAPI.Controller
 {
     [ApiController]
     [Route("projectmgmt/api/v1/manager/")]
-    [Authorize]
+    [Authorize(Policy = "OnlyManager")]
     public class TaskController : ControllerBase
     {
-        private readonly ILogger<TaskController> _logger;
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher<TaskEntity> _quoteDispatcher;
         private readonly IMemberRepository _repository;
         private readonly IMapper _mapper;
-        public TaskController(ILogger<TaskController> logger, ICommandDispatcher commandDispatcher,
-            IQueryDispatcher<TaskEntity> quoteDispatcher, IMemberRepository repository, IMapper mapper)
+        public TaskController(ICommandDispatcher commandDispatcher, IQueryDispatcher<TaskEntity> quoteDispatcher,
+            IMemberRepository repository, IMapper mapper)
         {
-            _logger = logger;
             _commandDispatcher = commandDispatcher;
             _quoteDispatcher = quoteDispatcher;
             _repository = repository;
@@ -32,6 +30,12 @@ namespace PMTA.WebAPI.Controller
         }
         [HttpPost]
         [Route("assign-task")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AssignTask([FromBody] CreateTaskCommand createTask)
         {
             var memberFromDB = await _repository.GetByIdAsync(createTask.MemberId);
@@ -53,6 +57,12 @@ namespace PMTA.WebAPI.Controller
 
         [HttpGet]
         [Route("list/{memberId}/taskDetails")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> FetchTaskDetailsByMemberId([FromRoute] int memberId)
         {
             var memberFromDB = await _repository.GetByIdAsync(memberId);

@@ -1,7 +1,4 @@
-﻿using PMTA.Domain.Entity;
-using System.ComponentModel.DataAnnotations;
-
-namespace PMTA.Domain.DTO
+﻿namespace PMTA.Domain.DTO
 {
     public class MemberQueryResponse
     {

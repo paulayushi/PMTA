@@ -17,7 +17,7 @@ namespace PMTA.WebAPI.Controller
 {
     [ApiController]
     [Route("projectmgmt/api/v1/manager/")]
-    [Authorize]
+    [Authorize(Policy = "OnlyManager")]
     public class MemberController : ControllerBase
     {
         private readonly ILogger<MemberController> _logger;
@@ -55,7 +55,7 @@ namespace PMTA.WebAPI.Controller
             }
 
             await _commandDispatcher.SendAsync(createMember);
-            return CreatedAtAction(nameof(AddMember), $"Member with id {createMember.MemberId} created successfully.");
+            return CreatedAtAction(nameof(AddMember), createMember);
         }
 
         [HttpGet]
@@ -64,6 +64,8 @@ namespace PMTA.WebAPI.Controller
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> FetchAllMemberDetails()
         {
 
@@ -86,6 +88,8 @@ namespace PMTA.WebAPI.Controller
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateAllocationPercentage(UpdateMemberCommand updateMember)
         {
             var memberFromDB = await _repository.GetByIdAsync(updateMember.MemberId);
@@ -117,8 +121,9 @@ namespace PMTA.WebAPI.Controller
 
             var claims = new[]{
                         new Claim(ClaimTypes.NameIdentifier, userFromRepo.MemberId.ToString()),
-                        new Claim(ClaimTypes.Name, userFromRepo.Name)
-                    };
+                        new Claim(ClaimTypes.Name, userFromRepo.Name),
+                        new Claim( type: "IsManager", value: userFromRepo.IsManager.ToString(), valueType: ClaimValueTypes.Boolean)
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JwtToken:SecretKey").Value));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
