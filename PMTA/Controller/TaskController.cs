@@ -13,7 +13,6 @@ namespace PMTA.WebAPI.Controller
 {
     [ApiController]
     [Route("projectmgmt/api/v1/manager/")]
-    [Authorize(Policy = "OnlyManager")]
     public class TaskController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
@@ -30,6 +29,7 @@ namespace PMTA.WebAPI.Controller
         }
         [HttpPost]
         [Route("assign-task")]
+        [Authorize(Policy = "OnlyManager")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -57,6 +57,7 @@ namespace PMTA.WebAPI.Controller
 
         [HttpGet]
         [Route("list/{memberId}/taskDetails")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

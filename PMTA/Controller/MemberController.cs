@@ -102,7 +102,7 @@ namespace PMTA.WebAPI.Controller
             updateMember.Id = memberFromDB.EventId;
             updateMember.ProjectEndDate = memberFromDB.ProjectEndDate;
             await _commandDispatcher.SendAsync(updateMember);
-            return Ok($"Allocation percentage for member = {updateMember.MemberId} is successfully updated.");
+            return Ok(updateMember);
         }
 
         [HttpPost]
