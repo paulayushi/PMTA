@@ -14,6 +14,7 @@ namespace PMTA.Domain.Command
         public string Delivarables { get; set; }
         [Required]
         public DateTime TaskStartDate { get; set; }
+        [Required]
         [DateRangeValidator(nameof(TaskStartDate), ErrorMessage = $"{nameof(TaskEndDate)} must be greater than {nameof(TaskStartDate)}")]
         public DateTime? TaskEndDate { get; set; }
         public string? MemberName { get; set; }
