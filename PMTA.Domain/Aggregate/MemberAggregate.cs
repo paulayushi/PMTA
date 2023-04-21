@@ -1,6 +1,5 @@
 ﻿using PMTA.Core.Aggregate;
 using PMTA.Domain.Command;
-using PMTA.Domain.Entity;
 using PMTA.Domain.Event;
 
 namespace PMTA.Domain.Aggregate
@@ -57,7 +56,9 @@ namespace PMTA.Domain.Aggregate
             {
                 Id = updateMemberCommand.Id,
                 MemberId = updateMemberCommand.MemberId,
-                AllocationPercentage= updateMemberCommand.ProjectEndDate > DateTime.Now ? 100 : 0,
+                AllocationPercentage= updateMemberCommand.ProjectEndDate.Value.Date == DateTime.Now.Date 
+                                      ? updateMemberCommand.AllocationPercentage 
+                                      : (updateMemberCommand.ProjectEndDate.Value.Date > DateTime.Now.Date ? 100 : 0)
             });
         }
         public void Apply(MemberUpdatedEvent @event)
